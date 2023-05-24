@@ -1,3 +1,21 @@
+"""
+NOTE:
+
+The actual logic of the endpoint should not be in the API module. Rather, this logic should be moved to a use case or service.
+Also the formatting of the imports are not pythonic, in Python the way we do imports are as follow:
+
+import builtins
+# space
+import third party or community libraries
+# space
+import internal modules in the following way:
+from some import Some
+# no space
+from .some import Some
+# no space
+from ..some import Some
+"""
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 

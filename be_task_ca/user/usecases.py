@@ -1,13 +1,40 @@
+"""
+NOTE:
+Clean Architecture: 
+The use cases should only contain the business logic. 
+They should not be aware of the details of the data persistence layer or the web framework being used.
+For example, the use case should not be directly interacting with FastAPI-specific request or response objects. 
+Instead, these details should be handled at the controller layer.
+Or as another example Here, the create_user use case is aware of the data persistence layer because it directly interacts with the SQLAlchemy session object.
+This should be avoided. Instead, the responsibility of interacting with the database should be delegated to the repository layer. 
+
+The refactored code might look something like this:
+
+def create_user(user_repository, user_details):
+    hashed_password = bcrypt.hashpw(user_details.password, bcrypt.gensalt())
+    user = User(username=user_details.username, password=hashed_password)
+    user_repository.save(user)
+
+In general, to avoid direct dependency of use cases on SQLAlchemy models, we can introduce DTOs. 
+Use Cases would interact with these DTOs instead of directly interacting with database models.
+
+General: 
+Hashing password logic inside create_user function seems a bit out of place. 
+We might want to create a separate utility function for password hashing and by adding salt to the hash,
+we can make the user data more secure.
+Also the create_user is redefined from the outer scope, we'd can detect such common issues by installing 
+tools like Pylint which makes it quite easy to figure out issues like this.
+"""
+
+
 import hashlib
+
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from ..item.model import Item
-
 from ..item.repository import find_item_by_id
-
 from .model import CartItem, User
-
 from .repository import (
     find_cart_items_for_user_id,
     find_user_by_email,
@@ -50,7 +77,9 @@ def create_user(create_user: CreateUserRequest, db: Session) -> CreateUserRespon
     )
 
 
-def add_item_to_cart(user_id: int, cart_item: AddToCartRequest, db: Session) -> AddToCartResponse:
+def add_item_to_cart(
+    user_id: int, cart_item: AddToCartRequest, db: Session
+) -> AddToCartResponse:
     user: User = find_user_by_id(user_id, db)
     if user is None:
         raise HTTPException(status_code=404, detail="User does not exist")

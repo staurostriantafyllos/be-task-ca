@@ -17,6 +17,6 @@ def get_all_items(db: Session) -> List[Item]:
 def find_item_by_name(name: str, db: Session) -> Item:
     return db.query(Item).filter(Item.name == name).first()
 
-
+# The built-in id is redefined here, better to use id_
 def find_item_by_id(id: UUID, db: Session) -> Item:
     return db.query(Item).filter(Item.id == id).first()

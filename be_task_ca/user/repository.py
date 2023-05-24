@@ -1,3 +1,11 @@
+"""
+NOTE:
+
+General: 
+You can use Python's typing features to make your code easier to understand. 
+For example, def find_user_by_id(user_id: UUID, db: Session) -> Optional[User]:
+"""
+
 from uuid import UUID
 from sqlalchemy.orm import Session
 from .model import CartItem, User

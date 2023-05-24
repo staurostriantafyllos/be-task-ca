@@ -1,11 +1,19 @@
-from typing import List
-from fastapi import HTTPException
+"""
+NOTE:
+Similar principles as user usecases would apply here as well. 
+If there are use cases in this module that directly interact with the database or the web framework,
+those responsibilities should be delegated to the appropriate layers. 
+Use cases in this module should focus only on the business operations related to items.
+"""
 
-from .repository import find_item_by_name, get_all_items, save_item
+from typing import List
+
+from fastapi import HTTPException
+from sqlalchemy.orm import Session
 
 from .model import Item
+from .repository import find_item_by_name, get_all_items, save_item
 from .schema import AllItemsRepsonse, CreateItemRequest, CreateItemResponse
-from sqlalchemy.orm import Session
 
 
 def create_item(item: CreateItemRequest, db: Session) -> CreateItemResponse:
