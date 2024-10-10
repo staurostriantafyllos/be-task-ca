@@ -1,0 +1,69 @@
+{
+	"info": {
+		"_postman_id": "0ac64045-e9b9-45fb-87e3-39338ee2e061",
+		"name": "inventory",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27171383"
+	},
+	"item": [
+		{
+			"name": "Create item",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if(pm.response.code == 200) {",
+							"    var jsonData = JSON.parse(responseBody);",
+							"    pm.globals.set(\"item_id\", jsonData.id);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Sony PS5\",\n    \"description\": \"The PlayStation 5 (PS5) is a home video game console developed by Sony Interactive Entertainment.\",\n    \"price\": 599.99,\n    \"quantity\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/items/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"items",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all items",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/items/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"items",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,26 @@
+{
+	"id": "3f30ca56-3ca5-44e0-896a-406e5c5b1b6b",
+	"values": [
+		{
+			"key": "base_url",
+			"value": "localhost:8000",
+			"enabled": true
+		},
+		{
+			"key": "user_id",
+			"value": "<create user first>",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "item_id",
+			"value": "<create item first>",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"name": "Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2023-05-01T13:02:00.129Z",
+	"_postman_exported_using": "Postman/10.12.13"
+}
