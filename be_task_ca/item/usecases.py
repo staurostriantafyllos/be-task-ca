@@ -1,41 +1,18 @@
 from typing import List
-from fastapi import HTTPException
+from .domain import Item
+from .interfaces import ItemRepositoryInterface
+from .exceptions import ItemAlreadyExistsError
 
-from .repository import find_item_by_name, get_all_items, save_item
+def create_item(item: Item, repo: ItemRepositoryInterface) -> Item:
+    """
+    Create a new item if it doesn't exist in the repository.
+    """
 
-from .model import Item
-from .schema import AllItemsRepsonse, CreateItemRequest, CreateItemResponse
-from sqlalchemy.orm import Session
+    if repo.find_item_by_name(item.name):
+        raise ItemAlreadyExistsError(item.name) # Adding a generic exception to avoid coupling with the framework (HTTPException)
+    return repo.save_item(item)
 
-
-def create_item(item: CreateItemRequest, db: Session) -> CreateItemResponse:
-    search_result = find_item_by_name(item.name, db)
-    if search_result is not None:
-        raise HTTPException(
-            status_code=409, detail="An item with this name already exists"
-        )
-
-    new_item = Item(
-        name=item.name,
-        description=item.description,
-        price=item.price,
-        quantity=item.quantity,
-    )
-
-    save_item(new_item, db)
-    return model_to_schema(new_item)
-
-
-def get_all(db: Session) -> List[CreateItemResponse]:
-    item_list = get_all_items(db)
-    return AllItemsRepsonse(items=list(map(model_to_schema, item_list)))
-
-
-def model_to_schema(item: Item) -> CreateItemResponse:
-    return CreateItemResponse(
-        id=item.id,
-        name=item.name,
-        description=item.description,
-        price=item.price,
-        quantity=item.quantity,
-    )
+def get_all(repo: ItemRepositoryInterface) -> List[Item]:
+    """???"""
+    item_list = repo.get_all_items()
+    return item_list
