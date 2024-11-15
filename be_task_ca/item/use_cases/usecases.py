@@ -1,7 +1,7 @@
 from typing import List
-from .domain import Item
-from .interfaces import ItemRepositoryInterface
-from .exceptions import ItemAlreadyExistsError
+from ..entities.item import Item
+from ..interfaces.item_repository_interface import ItemRepositoryInterface
+from ..exceptions import ItemAlreadyExistsError
 
 def create_item(item: Item, repo: ItemRepositoryInterface) -> Item:
     """

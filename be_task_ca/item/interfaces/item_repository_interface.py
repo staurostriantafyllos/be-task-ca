@@ -1,7 +1,7 @@
 from typing import List, Optional
 from uuid import UUID
 from abc import ABC, abstractmethod
-from .domain import Item
+from ..entities.item import Item
 
 class ItemRepositoryInterface(ABC):
     """???"""

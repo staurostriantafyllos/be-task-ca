@@ -1,14 +1,12 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 
-from .usecases import create_item, get_all
-
-from ..common import get_db
-
-from .schema import CreateItemRequest, CreateItemResponse, AllItemsResponse
-from .repository import ItemPostgresRepository
-from .domain import Item
-from .exceptions import ItemAlreadyExistsError
+from ..use_cases.usecases import create_item, get_all
+from ...common import get_db
+from ..api.schema import CreateItemRequest, CreateItemResponse, AllItemsResponse
+from ..repositories.item_postgres_repository import ItemPostgresRepository
+from ..entities.item import Item
+from ..exceptions import ItemAlreadyExistsError
 
 item_router = APIRouter(
     prefix="/items",

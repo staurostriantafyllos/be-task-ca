@@ -2,25 +2,8 @@ from typing import List, Optional
 from uuid import UUID
 from sqlalchemy.orm import Session
 from .model import Item as ItemModel
-from .domain import Item
-from .interfaces import ItemRepositoryInterface
-
-def save_item(item: Item, db: Session) -> Item:
-    db.add(item)
-    db.commit()
-    return item
-
-
-def get_all_items(db: Session) -> List[Item]:
-    return db.query(Item).all()
-
-
-def find_item_by_name(name: str, db: Session) -> Item:
-    return db.query(Item).filter(Item.name == name).first()
-
-
-def find_item_by_id(id: UUID, db: Session) -> Item:
-    return db.query(Item).filter(Item.id == id).first()
+from ..entities.item import Item
+from ..interfaces.item_repository_interface import ItemRepositoryInterface
 
 class ItemPostgresRepository(ItemRepositoryInterface):
     """???"""
@@ -82,19 +65,3 @@ class ItemPostgresRepository(ItemRepositoryInterface):
             price=item.price,
             quantity=item.quantity,
         )
-
-# class ItemInMemoryRepository(ItemRepositoryInterface):
-#     """???"""
-
-#     def __init__(self, db_session: Session):
-#         # TODO: Debe recibir la session???
-#         print("ItemInMemoryRepository - __init__")
-#         self.db_session = db_session
-
-#     # def get_all(self) -> List[Item]:
-#     def get_all(self):
-#         """Retrieves all items"""
-#         print("ItemPostgresRepository - get_all")
-#         items = self.db_session.query(Item).all()
-#         print(items)
-#         return []
