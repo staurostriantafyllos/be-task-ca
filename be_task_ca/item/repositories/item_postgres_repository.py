@@ -14,6 +14,7 @@ class ItemPostgresRepository(ItemRepositoryInterface):
 
     def get_all_items(self) -> List[Item]:
         """Retrieves all items."""
+
         item_list = self.db_session.query(ItemModel).all()
         return [Item(**asdict(item_model)) for item_model in item_list]
 

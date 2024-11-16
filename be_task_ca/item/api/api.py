@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 from ..use_cases.usecases import create_item, get_all
 from ...common import get_db
 from ..api.schema import CreateItemRequest, CreateItemResponse, AllItemsResponse
-from ..repositories.item_postgres_repository import ItemPostgresRepository
+# from ..repositories.item_postgres_repository import ItemPostgresRepository
+from ..repositories.item_inmemory_repository import ItemInMemoryRepository
 from ..interfaces.item_repository_interface import ItemRepositoryInterface
 from ..exceptions import ItemAlreadyExistsError
 from .converters import item_entity_to_dto, item_dto_to_entity
@@ -13,9 +14,15 @@ item_router = APIRouter(
     tags=["item"],
 )
 
-def get_item_repository(db: Session = Depends(get_db)) -> ItemRepositoryInterface:
+# def get_item_repository(db: Session = Depends(get_db)) -> ItemRepositoryInterface:
+#     """Retrieves a ItemRepositoryInterface dependency"""
+#
+#     return ItemPostgresRepository(db)
+
+def get_item_repository() -> ItemRepositoryInterface:
     """Retrieves a ItemRepositoryInterface dependency"""
-    return ItemPostgresRepository(db)
+
+    return ItemInMemoryRepository()
 
 @item_router.post("/", status_code=status.HTTP_201_CREATED)
 async def post_item(
@@ -23,6 +30,7 @@ async def post_item(
     repo: ItemRepositoryInterface = Depends(get_item_repository)
 ) -> CreateItemResponse:
     """Handles the creation of a new item."""
+
     item = item_dto_to_entity(dto_item)
 
     try:

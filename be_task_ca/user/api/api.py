@@ -3,12 +3,14 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 from .converters import user_entity_to_dto, user_dto_to_entity, cart_item_dto_to_entity, cart_item_entity_to_dto
 from ..repositories.user_postgres_repository import UserPostgresRepository
+from ..repositories.user_inmemory_repository import UserInMemoryRepository
 from ..interfaces.user_repository_interface import UserRepositoryInterface
 from ..api.schema import CreateUserRequest, CreateUserResponse, AddToCartRequest, AddToCartResponse
 from ...common import get_db
 from ..exceptions import UserAlreadyExistsError, UserDoesNotExistError, ItemAlreadyInCartError
 from ..use_cases.usecases import create_user, add_item_to_cart, list_items_in_cart
 from ...item.repositories.item_postgres_repository import ItemPostgresRepository
+from ...item.repositories.item_inmemory_repository import ItemInMemoryRepository
 from ...item.interfaces.item_repository_interface import ItemRepositoryInterface
 from ...item.exceptions import ItemDoesNotExistError
 
@@ -18,13 +20,23 @@ user_router = APIRouter(
     tags=["user"],
 )
 
-def get_user_repository(db: Session = Depends(get_db)) -> UserRepositoryInterface:
-    """Retrieves a UserPostgresRepository dependency"""
-    return UserPostgresRepository(db)
+# def get_user_repository(db: Session = Depends(get_db)) -> UserRepositoryInterface:
+#     """Retrieves a UserPostgresRepository dependency"""
+#     return UserPostgresRepository(db)
 
-def get_item_repository(db: Session = Depends(get_db)) -> ItemRepositoryInterface:
-    """Retrieves a ItemPostgresRepository dependency"""
-    return ItemPostgresRepository(db)
+# def get_item_repository(db: Session = Depends(get_db)) -> ItemRepositoryInterface:
+#     """Retrieves a ItemPostgresRepository dependency"""
+#     return ItemPostgresRepository(db)
+
+def get_user_repository() -> UserRepositoryInterface:
+    """Retrieves a ItemRepositoryInterface dependency"""
+
+    return UserInMemoryRepository()
+
+def get_item_repository() -> ItemRepositoryInterface:
+    """Retrieves a ItemRepositoryInterface dependency"""
+
+    return ItemInMemoryRepository()
 
 @user_router.post("/", status_code=status.HTTP_201_CREATED)
 async def post_user(
