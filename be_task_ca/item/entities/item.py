@@ -4,7 +4,7 @@ from uuid import UUID, uuid4
 
 @dataclass
 class Item:
-    """???"""
+    """Item domain entity definition."""
 
     name: str
     description: str

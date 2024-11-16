@@ -1,61 +1,41 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
-
 from ..use_cases.usecases import create_item, get_all
 from ...common import get_db
 from ..api.schema import CreateItemRequest, CreateItemResponse, AllItemsResponse
 from ..repositories.item_postgres_repository import ItemPostgresRepository
-from ..entities.item import Item
 from ..exceptions import ItemAlreadyExistsError
+from .converters import item_entity_to_dto, item_dto_to_entity
 
 item_router = APIRouter(
     prefix="/items",
     tags=["item"],
 )
 
+def get_postgres_item_repository(db: Session = Depends(get_db)) -> ItemPostgresRepository:
+    """Retrieves a ItemPostgresRepository dependency"""
+    return ItemPostgresRepository(db)
+
 @item_router.post("/", status_code=status.HTTP_201_CREATED)
 async def post_item(
-    dto_item: CreateItemRequest, db: Session = Depends(get_db)
+    dto_item: CreateItemRequest,
+    repo: ItemPostgresRepository = Depends(get_postgres_item_repository)
 ) -> CreateItemResponse:
-    item = dto_to_entity(dto_item)
+    """Handles the creation of a new item."""
+    item = item_dto_to_entity(dto_item)
 
-    repo = ItemPostgresRepository(db) #TODO: Inyectar el repo con Depends????
     try:
-        item = create_item(dto_item, repo)
+        item = create_item(item, repo)
     except ItemAlreadyExistsError as e:
         raise HTTPException(status_code=409, detail=str(e)) from e
 
-    dto_item = entity_to_dto(item)
-    return dto_item
+    return item_entity_to_dto(item)
 
 @item_router.get("/", status_code=status.HTTP_200_OK)
-async def get_items(db: Session = Depends(get_db)) -> AllItemsResponse:
-    """???"""
-    repo = ItemPostgresRepository(db) #TODO: Inyectar el repo con Depends????
+async def get_items(
+    repo: ItemPostgresRepository = Depends(get_postgres_item_repository)
+) -> AllItemsResponse:
+    """Retrieves all items."""
+
     item_list = get_all(repo)
-
-    # Converting domain items to DTO
-    dto_list=list(map(entity_to_dto, item_list))
-    print(dto_list)
-    return AllItemsResponse(items=dto_list)
-
-def entity_to_dto(item: Item) -> CreateItemResponse:
-    """???"""
-    # TODO: Dónde ubico este transformador/converter?
-    return CreateItemResponse(
-        id=item.id,
-        name=item.name,
-        description=item.description,
-        price=item.price,
-        quantity=item.quantity,
-    )
-
-def dto_to_entity(dto_item: CreateItemResponse) -> Item:
-    """???"""
-    # TODO: Dónde ubico este transformador/converter?
-    return Item(
-        name=dto_item.name,
-        description=dto_item.description,
-        price=dto_item.price,
-        quantity=dto_item.quantity,
-    )
+    return AllItemsResponse(items=list(map(item_entity_to_dto, item_list)))
