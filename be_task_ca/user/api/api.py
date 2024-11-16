@@ -3,11 +3,13 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 from .converters import user_entity_to_dto, user_dto_to_entity, cart_item_dto_to_entity, cart_item_entity_to_dto
 from ..repositories.user_postgres_repository import UserPostgresRepository
+from ..interfaces.user_repository_interface import UserRepositoryInterface
 from ..api.schema import CreateUserRequest, CreateUserResponse, AddToCartRequest, AddToCartResponse
 from ...common import get_db
 from ..exceptions import UserAlreadyExistsError, UserDoesNotExistError, ItemAlreadyInCartError
 from ..use_cases.usecases import create_user, add_item_to_cart, list_items_in_cart
 from ...item.repositories.item_postgres_repository import ItemPostgresRepository
+from ...item.interfaces.item_repository_interface import ItemRepositoryInterface
 from ...item.exceptions import ItemDoesNotExistError
 
 
@@ -16,18 +18,18 @@ user_router = APIRouter(
     tags=["user"],
 )
 
-def get_postgres_user_repository(db: Session = Depends(get_db)) -> UserPostgresRepository:
+def get_user_repository(db: Session = Depends(get_db)) -> UserRepositoryInterface:
     """Retrieves a UserPostgresRepository dependency"""
     return UserPostgresRepository(db)
 
-def get_postgres_item_repository(db: Session = Depends(get_db)) -> ItemPostgresRepository:
+def get_item_repository(db: Session = Depends(get_db)) -> ItemRepositoryInterface:
     """Retrieves a ItemPostgresRepository dependency"""
     return ItemPostgresRepository(db)
 
 @user_router.post("/", status_code=status.HTTP_201_CREATED)
 async def post_user(
     dto_user: CreateUserRequest,
-    repo: UserPostgresRepository = Depends(get_postgres_user_repository)
+    repo: UserRepositoryInterface = Depends(get_user_repository)
 ) -> CreateUserResponse:
     """Handles the creation of a new user."""
 
@@ -43,8 +45,8 @@ async def post_user(
 @user_router.post("/{user_id}/cart", status_code=status.HTTP_201_CREATED)
 async def post_cart(
     user_id: UUID, cart_item_dto: AddToCartRequest,
-    user_repo: UserPostgresRepository = Depends(get_postgres_user_repository),
-    item_repo: ItemPostgresRepository = Depends(get_postgres_item_repository)
+    user_repo: UserRepositoryInterface = Depends(get_user_repository),
+    item_repo: ItemRepositoryInterface = Depends(get_item_repository)
 ) -> AddToCartResponse:
     """Adds an item to the user's cart."""
 
@@ -60,7 +62,7 @@ async def post_cart(
 @user_router.get("/{user_id}/cart", status_code=status.HTTP_200_OK)
 async def get_cart(
     user_id: UUID,
-    repo: UserPostgresRepository = Depends(get_postgres_user_repository)
+    repo: UserRepositoryInterface = Depends(get_user_repository)
 ) -> AddToCartResponse:
     """Retrieves all items in the user's cart."""
 
