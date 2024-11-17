@@ -36,7 +36,6 @@ async def post_item(
 
     try:
         item = create_item(item, repo)
-        print(item)
     except ItemAlreadyExistsError as e:
         raise HTTPException(status_code=409, detail=str(e)) from e
 

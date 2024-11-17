@@ -13,7 +13,7 @@ def repo():
     repo.items.clear() # Cleaning items before executing each test
     return repo
 
-
+@pytest.mark.repository
 def test_save_item(repo):
     """Test saving a new item in the repository."""
 
@@ -34,6 +34,7 @@ def test_save_item(repo):
     assert len(items) == 1
     assert items[0].name == "Item 1"
 
+@pytest.mark.repository
 def test_get_all_items(repo):
     """Test getting all items from the repository."""
 
@@ -53,6 +54,7 @@ def test_get_all_items(repo):
     assert items[0].name == "Item 1"
     assert items[1].name == "Item 2"
 
+@pytest.mark.repository
 def test_find_item_by_name_found(repo):
     """Test finding an item by its name in the repository."""
 
@@ -68,6 +70,7 @@ def test_find_item_by_name_found(repo):
     assert item.name == "Item 1"
     assert item.description == "Description 1"
 
+@pytest.mark.repository
 def test_find_item_by_name_not_found(repo):
     """Test finding an item by name that doesn't exist."""
 
@@ -77,6 +80,7 @@ def test_find_item_by_name_not_found(repo):
     # Assert
     assert item is None
 
+@pytest.mark.repository
 def test_find_item_by_id_found(repo):
     """Test finding an item by its ID in the repository."""
 
@@ -93,6 +97,7 @@ def test_find_item_by_id_found(repo):
     assert item.name == "Item 1"
     assert item.description == "Description 1"
 
+@pytest.mark.repository
 def test_find_item_by_id_not_found(repo):
     """Test finding an item by ID that doesn't exist."""
 

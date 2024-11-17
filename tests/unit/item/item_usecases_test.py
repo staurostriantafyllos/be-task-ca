@@ -9,6 +9,7 @@ def mock_repo(mocker):
     """Fixture to mock the Item repository."""
     return mocker.Mock()
 
+@pytest.mark.usecases
 def test_create_item_creates_new_item(mock_repo):
     """Tests the use case 'create_item' when item doesn't exist."""
 
@@ -28,6 +29,7 @@ def test_create_item_creates_new_item(mock_repo):
     mock_repo.find_item_by_name.assert_called_once_with(item_to_be_created.name)
     mock_repo.save_item.assert_called_once_with(item_to_be_created)
 
+@pytest.mark.usecases
 def test_create_item_already_exists(mock_repo):
     """Tests the use case 'create_item' when item already exists."""
 
@@ -49,6 +51,7 @@ def test_create_item_already_exists(mock_repo):
     mock_repo.find_item_by_name.assert_called_once_with(item_to_be_created.name)
     mock_repo.save_item.assert_not_called()
 
+@pytest.mark.usecases
 def test_get_all_items(mock_repo):
     """Tests if the use case 'get_all' returns a list of items."""
 

@@ -42,6 +42,7 @@ def cartitem_to_be_added():
         quantity=5
     )
 
+@pytest.mark.usecases
 def test_create_user_creates_new_user(user_mock_repo, user_to_be_created):
     """Tests the use case 'create_user' when user doesn't exist."""
 
@@ -58,6 +59,7 @@ def test_create_user_creates_new_user(user_mock_repo, user_to_be_created):
     user_mock_repo.save_user.assert_called_once_with(user_to_be_created)
     user_mock_repo.find_user_by_email.assert_called_once_with(user_to_be_created.email)
 
+@pytest.mark.usecases
 def test_create_user_already_exists(user_mock_repo, user_to_be_created):
     """Tests the use case 'create_user' when user already exists."""
 
@@ -75,7 +77,7 @@ def test_create_user_already_exists(user_mock_repo, user_to_be_created):
     user_mock_repo.find_user_by_email.assert_called_once_with(user_to_be_created.email)
     user_mock_repo.save_user.assert_not_called()
 
-
+@pytest.mark.usecases
 def test_list_items_in_cart(user_mock_repo):
     """Tests if the use case 'list_items_in_cart' returns a list of cart items."""
 
@@ -95,6 +97,7 @@ def test_list_items_in_cart(user_mock_repo):
     assert cart_items == mock_cartitems
     user_mock_repo.find_cart_items_for_user_id.assert_called_once()
 
+@pytest.mark.usecases
 def test_add_item_to_cart_adds_new_item(
         user_mock_repo, item_mock_repo, cartitem_to_be_added, user_to_be_created
 ):
@@ -120,6 +123,7 @@ def test_add_item_to_cart_adds_new_item(
     user_mock_repo.save_cart_item.assert_called_once_with(cartitem_to_be_added)
     user_mock_repo.find_cart_items_for_user_id.assert_called_once()
 
+@pytest.mark.usecases
 def test_add_item_to_cart_when_user_doesnt_exist(
         user_mock_repo, item_mock_repo, cartitem_to_be_added, user_to_be_created
 ):
@@ -137,6 +141,7 @@ def test_add_item_to_cart_when_user_doesnt_exist(
     user_mock_repo.find_user_by_id.assert_called_once_with(cartitem_to_be_added.user_id)
     user_mock_repo.save_cart_item.assert_not_called()
 
+@pytest.mark.usecases
 def test_add_item_to_cart_when_item_doesnt_exist(
         user_mock_repo, item_mock_repo, cartitem_to_be_added, user_to_be_created
 ):
@@ -157,6 +162,7 @@ def test_add_item_to_cart_when_item_doesnt_exist(
     item_mock_repo.find_item_by_id.assert_called_once_with(cartitem_to_be_added.item_id)
     user_mock_repo.save_cart_item.assert_not_called()
 
+@pytest.mark.usecases
 def test_add_item_to_cart_when_item_already_in_cart(
         user_mock_repo, item_mock_repo, cartitem_to_be_added, user_to_be_created
 ):

@@ -38,6 +38,7 @@ def mock_create_item(mocker):
 
     return mocker.patch("be_task_ca.item.api.api.create_item")
 
+@pytest.mark.api
 def test_get_items_returns_items(client, mock_get_all):
     """Test if the 'get_items' endpoint returns a list of items."""
 
@@ -52,6 +53,7 @@ def test_get_items_returns_items(client, mock_get_all):
     mock_get_all.assert_called_once()
     assert response.json() == jsonable_encoder(expected_response)
 
+@pytest.mark.api
 def test_get_items_returns_empty_response(client, mock_get_all):
     """Test if the 'get_items' endpoint returns a list of items."""
 
@@ -67,6 +69,7 @@ def test_get_items_returns_empty_response(client, mock_get_all):
     mock_get_all.assert_called_once()
     assert response.json() == jsonable_encoder(expected_response)
 
+@pytest.mark.api
 def test_post_item_creates_new_item(client, mock_create_item):
     """Test the 'post_item' endpoint if the item doesn't exist."""
 
@@ -83,6 +86,7 @@ def test_post_item_creates_new_item(client, mock_create_item):
     mock_create_item.assert_called_once()
     assert response.json() == jsonable_encoder(expected_response)
 
+@pytest.mark.api
 def test_post_item_already_exists(client, mock_create_item):
     """Test the 'post_item' endpoint if the item already exists."""
 

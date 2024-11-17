@@ -64,6 +64,7 @@ def mock_list_items_in_cart(mocker):
     mock = mocker.patch("be_task_ca.user.api.api.list_items_in_cart", return_value=mock_cartitems)
     return mock
 
+@pytest.mark.api
 def test_post_user_creates_new_item(client, mock_create_user, user_request):
     """Test the 'post_user' endpoint if the user doesn't exist."""
 
@@ -90,6 +91,7 @@ def test_post_user_creates_new_item(client, mock_create_user, user_request):
     mock_create_user.assert_called_once()
     assert response.json() == jsonable_encoder(expected_response)
 
+@pytest.mark.api
 def test_post_user_already_exists(client, mock_create_user, user_request):
     """Test the 'post_user' endpoint if the user already exists."""
 
@@ -104,6 +106,7 @@ def test_post_user_already_exists(client, mock_create_user, user_request):
     mock_create_user.assert_called_once()
     assert response.json() == {"detail": str(UserAlreadyExistsError(user_request["email"]))}
 
+@pytest.mark.api
 def test_post_cart_adds_new_item(client, mock_add_item_to_cart, cartitem_request):
     """Test the 'post_cart' endpoint if item and user exist."""
 
@@ -126,6 +129,7 @@ def test_post_cart_adds_new_item(client, mock_add_item_to_cart, cartitem_request
     mock_add_item_to_cart.assert_called_once()
     assert response.json() == jsonable_encoder(expected_response)
 
+@pytest.mark.api
 def test_post_cart_user_doesnt_exist(client, mock_add_item_to_cart, cartitem_request):
     """Test the 'post_cart' endpoint if user doesn'texist."""
 
@@ -141,6 +145,7 @@ def test_post_cart_user_doesnt_exist(client, mock_add_item_to_cart, cartitem_req
     mock_add_item_to_cart.assert_called_once()
     assert response.json() == {"detail": str(UserDoesNotExistError())}
 
+@pytest.mark.api
 def test_post_cart_item_doesnt_exist(client, mock_add_item_to_cart, cartitem_request):
     """Test the 'post_cart' endpoint if item doesn'texist."""
 
@@ -156,6 +161,7 @@ def test_post_cart_item_doesnt_exist(client, mock_add_item_to_cart, cartitem_req
     mock_add_item_to_cart.assert_called_once()
     assert response.json() == {"detail": str(ItemDoesNotExistError())}
 
+@pytest.mark.api
 def test_post_cart_item_already_in_cart(client, mock_add_item_to_cart, cartitem_request):
     """Test the 'post_cart' endpoint if item is already in the cart."""
 
@@ -171,6 +177,7 @@ def test_post_cart_item_already_in_cart(client, mock_add_item_to_cart, cartitem_
     mock_add_item_to_cart.assert_called_once()
     assert response.json() == {"detail": str(ItemAlreadyInCartError())}
 
+@pytest.mark.api
 def test_get_cart_returns_cartitems(client, mock_list_items_in_cart):
     """Test if the 'get_cart' endpoint returns a list of cart items."""
 

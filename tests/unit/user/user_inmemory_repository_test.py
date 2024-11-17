@@ -35,6 +35,7 @@ def cartitem_to_be_created():
         quantity=5
     )
 
+@pytest.mark.repository
 def test_save_user(repo, user_to_be_created):
     """Test saving a new user in the repository."""
 
@@ -51,6 +52,7 @@ def test_save_user(repo, user_to_be_created):
     assert saved_user.hashed_password == user.hashed_password
     assert saved_user.shipping_address == user.shipping_address
 
+@pytest.mark.repository
 def test_find_user_by_email_found(repo, user_to_be_created):
     """Test finding a user by its email in the repository."""
 
@@ -66,6 +68,7 @@ def test_find_user_by_email_found(repo, user_to_be_created):
     assert user.first_name == user_to_be_created.first_name
     assert user.last_name == user_to_be_created.last_name
 
+@pytest.mark.repository
 def test_find_user_by_email__not_found(repo):
     """Test finding a user by email that doesn't exist."""
 
@@ -75,6 +78,7 @@ def test_find_user_by_email__not_found(repo):
     # Assert
     assert user is None
 
+@pytest.mark.repository
 def test_find_user_by_id_found(repo, user_to_be_created):
     """Test finding a user by its ID in the repository."""
 
@@ -90,6 +94,7 @@ def test_find_user_by_id_found(repo, user_to_be_created):
     assert user.first_name == user_to_be_created.first_name
     assert user.last_name == user_to_be_created.last_name
 
+@pytest.mark.repository
 def test_find_user_by_id_not_found(repo):
     """Test finding a user by ID that doesn't exist."""
 
@@ -99,6 +104,7 @@ def test_find_user_by_id_not_found(repo):
     # Assert
     assert user is None
 
+@pytest.mark.repository
 def test_save_cart_item(repo, cartitem_to_be_created):
     """Test saving a new cart item in the repository."""
 
@@ -112,7 +118,7 @@ def test_save_cart_item(repo, cartitem_to_be_created):
     assert saved_cart_item.item_id == cart_items[0].item_id
     assert saved_cart_item.quantity == cart_items[0].quantity
 
-
+@pytest.mark.repository
 def test_find_cart_items_for_user_id(repo):
     """Test getting all cart items by user from the repository."""
 
