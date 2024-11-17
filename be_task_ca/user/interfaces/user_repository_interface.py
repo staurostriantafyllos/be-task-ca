@@ -27,6 +27,6 @@ class UserRepositoryInterface(ABC):
         pass
 
     @abstractmethod
-    def find_cart_items_for_user_id(self, user_id: UUID):
+    def find_cart_items_for_user_id(self, user_id: UUID) -> List[CartItem]:
         """Gets all items in user cart."""
         pass

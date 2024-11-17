@@ -1,5 +1,5 @@
 from dataclasses import asdict
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID
 from sqlalchemy.orm import Session
 from .model import User as UserModel, CartItem as CartItemModel
@@ -54,7 +54,7 @@ class UserPostgresRepository(UserRepositoryInterface):
 
         return CartItem(**asdict(cartitem_model))
 
-    def find_cart_items_for_user_id(self, user_id: UUID):
+    def find_cart_items_for_user_id(self, user_id: UUID) -> List[CartItem]:
         """Gets all items in user cart."""
 
         cartitem_models = self.db_session.query(CartItemModel).filter(CartItemModel.user_id == user_id).all()

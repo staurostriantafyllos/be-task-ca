@@ -12,5 +12,6 @@ def create_item(item: Item, repo: ItemRepositoryInterface) -> Item:
 
 def get_all(repo: ItemRepositoryInterface) -> List[Item]:
     """Returns all items in the repository."""
+
     item_list = repo.get_all_items()
     return item_list

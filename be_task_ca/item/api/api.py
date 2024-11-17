@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
-from ..use_cases.usecases import create_item, get_all
+# from ..use_cases.usecases import create_item, get_all
+from be_task_ca.item.use_cases.usecases import create_item, get_all
 from ...common import get_db
 from ..api.schema import CreateItemRequest, CreateItemResponse, AllItemsResponse
 from ..repositories.item_postgres_repository import ItemPostgresRepository
@@ -35,6 +36,7 @@ async def post_item(
 
     try:
         item = create_item(item, repo)
+        print(item)
     except ItemAlreadyExistsError as e:
         raise HTTPException(status_code=409, detail=str(e)) from e
 
