@@ -1,10 +1,8 @@
-# Backend Task - Clean Architecture
+# Clean Architecture
 
 This project is a very naive implementation of a simple shop system. It mimics in its structure a real world example of a service that was prepared for being split into microservices and uses the current Helu backend tech stack.
 
 ## Goals
-
-Please answer the following questions:
 
 1. Why can we not easily split this project into two microservices?
    - Only one database is used. Each microservice should use its own database to maintain independence when dividing into Microservices.
