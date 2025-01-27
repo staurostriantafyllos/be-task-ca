@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from typing import List
 from uuid import UUID
 
@@ -5,7 +6,37 @@ from .schema import ItemBase, Item as ItemSchema
 from .model import Item
 
 
-class ItemRepo:
+class ItemRepo(ABC):
+    @abstractmethod
+    def save_item(self, item: ItemBase) -> ItemSchema:
+        """
+        Save an item to the database.
+        """
+        pass
+
+    @abstractmethod
+    def get_all_items(self) -> List[ItemSchema]:
+        """
+        Retrieve all items from the database.
+        """
+        pass
+
+    @abstractmethod
+    def find_item_by_name(self, name: str) -> ItemSchema | None:
+        """
+        Find an item by its name.
+        """
+        pass
+
+    @abstractmethod
+    def find_item_by_id(self, id: UUID) -> ItemSchema | None:
+        """
+        Find an item by its ID.
+        """
+        pass
+
+
+class ItemRepoPG(ItemRepo):
     def __init__(self, db):
         self.db = db
 

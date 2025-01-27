@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from typing import List
 from uuid import UUID
 
@@ -9,7 +10,46 @@ from .schema import (
 from .model import CartItem, User
 
 
-class UserRepo:
+class UserRepo(ABC):
+    @abstractmethod
+    def save_user(self, user: UserPrivate) -> UserSchema:
+        """
+        Save a new user to the database.
+        """
+        pass
+
+    @abstractmethod
+    def update_user_cart_items(
+        self, user_id: UUID, cart_item: ItemQuantity
+    ) -> ItemQuantity:
+        """
+        Add an item in the user's cart.
+        """
+        pass
+
+    @abstractmethod
+    def find_user_by_email(self, email: str) -> UserSchema | None:
+        """
+        Find a user by their email address.
+        """
+        pass
+
+    @abstractmethod
+    def find_user_by_id(self, id: UUID) -> UserSchema:
+        """
+        Find a user by their unique ID.
+        """
+        pass
+
+    @abstractmethod
+    def list_items_in_cart(self, user_id: UUID) -> List[ItemQuantity]:
+        """
+        List all items in a user's cart.
+        """
+        pass
+
+
+class UserRepoPG(UserRepo):
     def __init__(self, db):
         self.db = db
 
