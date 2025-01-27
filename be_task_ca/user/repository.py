@@ -49,7 +49,7 @@ class UserRepo(ABC):
         pass
 
 
-class UserRepoPG(UserRepo):
+class UserRepoSA(UserRepo):
     def __init__(self, db):
         self.db = db
 

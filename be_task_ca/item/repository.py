@@ -36,7 +36,7 @@ class ItemRepo(ABC):
         pass
 
 
-class ItemRepoPG(ItemRepo):
+class ItemRepoSA(ItemRepo):
     def __init__(self, db):
         self.db = db
 
