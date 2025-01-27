@@ -1,4 +1,4 @@
-from .database import engine, Base
+from .database import get_db_engine, Base
 
 # just importing all the models is enough to have them created
 # flake8: noqa
@@ -7,4 +7,4 @@ from .item.model import Item
 
 
 def create_db_schema():
-    Base.metadata.create_all(bind=engine)
+    Base.metadata.create_all(bind=get_db_engine())

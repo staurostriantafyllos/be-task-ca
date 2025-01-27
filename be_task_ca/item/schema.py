@@ -1,18 +1,20 @@
 from typing import List
 from uuid import UUID
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
-class CreateItemRequest(BaseModel):
+class ItemBase(BaseModel):
     name: str
     description: str | None = None
     price: float
     quantity: int
 
 
-class CreateItemResponse(CreateItemRequest):
+class Item(ItemBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
 
 
 class AllItemsRepsonse(BaseModel):
-    items: List[CreateItemResponse]
+    items: List[Item]

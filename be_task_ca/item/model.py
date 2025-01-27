@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 from uuid import UUID, uuid4
+
 from sqlalchemy.orm import Mapped, mapped_column
-from be_task_ca.database import Base
+
+from ..database import Base
 
 
 @dataclass
@@ -10,10 +12,10 @@ class Item(Base):
 
     id: Mapped[UUID] = mapped_column(
         primary_key=True,
-        default=uuid4(),
+        default=uuid4,
         index=True,
     )
     name: Mapped[str] = mapped_column(unique=True, index=True)
-    description: Mapped[str]
-    price: Mapped[float]
-    quantity: Mapped[int]
+    description: Mapped[str | None] = mapped_column(default=None, nullable=True)
+    price: Mapped[float] = mapped_column()
+    quantity: Mapped[int] = mapped_column()

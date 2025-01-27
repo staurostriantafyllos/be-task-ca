@@ -10,8 +10,9 @@ packages = [{ include = "be_task_ca" }]
 python = "^3.11"
 sqlalchemy = "^2.0.11"
 psycopg2 = "^2.9.6"
-fastapi = "^0.95.1"
+fastapi = ">=0.100.0"
 uvicorn = "^0.22.0"
+pydantic-settings = "^2.7.1"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -23,6 +24,7 @@ flake8-pyproject = "^1.2.3"
 cohesion = "^1.1.0"
 black = "^23.3.0"
 mypy = "^1.2.0"
+httpx = "^0.28.1"
 
 [build-system]
 requires = ["poetry-core"]
