@@ -12,7 +12,7 @@ class Item(Base):
 
     id: Mapped[UUID] = mapped_column(
         primary_key=True,
-        default=uuid4(),
+        default=uuid4,
         index=True,
     )
     name: Mapped[str] = mapped_column(unique=True, index=True)
