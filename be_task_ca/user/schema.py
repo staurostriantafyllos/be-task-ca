@@ -1,14 +1,13 @@
 from typing import List
 from uuid import UUID
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class ItemQuantity(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     item_id: UUID
     quantity: int
-
-    class Config:
-        orm_mode = True
 
 
 class UserBase(BaseModel):
@@ -23,11 +22,10 @@ class UserPrivate(UserBase):
 
 
 class User(UserBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: UUID
     cart_items: List[ItemQuantity] = []
-
-    class Config:
-        orm_mode = True
 
 
 class AddToCartResponse(BaseModel):

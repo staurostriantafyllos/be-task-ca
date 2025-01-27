@@ -24,7 +24,7 @@ class UserRepo:
         self.db.add(user)
         self.db.commit()
 
-        return UserSchema.from_orm(user)
+        return UserSchema.model_validate(user)
 
     def update_user_cart_items(self, user_id, cart_item: ItemQuantity) -> ItemQuantity:
         new_cart_item = CartItem(
@@ -35,18 +35,18 @@ class UserRepo:
         self.db.add(new_cart_item)
         self.db.commit()
 
-        return ItemQuantity.from_orm(new_cart_item)
+        return ItemQuantity.model_validate(new_cart_item)
 
     def find_user_by_email(self, email: str) -> UserSchema | None:
         user = self.db.query(User).filter(User.email == email).first()
         if not user:
             return
-        return UserSchema.from_orm(user)
+        return UserSchema.model_validate(user)
 
     def find_user_by_id(self, id: UUID) -> UserSchema:
         user = self.db.query(User).filter(User.id == id).first()
-        return UserSchema.from_orm(user)
+        return UserSchema.model_validate(user)
 
     def list_items_in_cart(self, user_id) -> List[ItemQuantity]:
         cart_items = self.db.query(CartItem).filter(CartItem.user_id == user_id).all()
-        return [ItemQuantity.from_orm(item) for item in cart_items]
+        return [ItemQuantity.model_validate(item) for item in cart_items]

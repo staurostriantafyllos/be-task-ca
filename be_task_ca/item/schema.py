@@ -1,6 +1,6 @@
 from typing import List
 from uuid import UUID
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class ItemBase(BaseModel):
@@ -11,10 +11,9 @@ class ItemBase(BaseModel):
 
 
 class Item(ItemBase):
-    id: UUID
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        orm_mode = True
+    id: UUID
 
 
 class AllItemsRepsonse(BaseModel):
