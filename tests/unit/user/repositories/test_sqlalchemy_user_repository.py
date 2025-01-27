@@ -9,7 +9,7 @@ from be_task_ca.user.repository import UserRepoSA
 from be_task_ca.user.schema import UserPrivate
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def db():
     engine = create_engine("sqlite:///:memory:")
     Base.metadata.create_all(bind=engine)
@@ -24,7 +24,7 @@ def db():
         Base.metadata.drop_all(bind=engine)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def user_repo(db):
     return UserRepoSA(db)
 
