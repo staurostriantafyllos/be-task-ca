@@ -95,11 +95,9 @@ Stretch goals:
 
 If you have not installed poetry you find instructions [here](https://python-poetry.org/).
 
-1. `docker-compose up` - runs a postgres instance for development
-2. `poetry install` - install all dependency for the project
-3. `poetry run schema` - creates the database schema in the postgres instance
-4. `poetry run start` - runs the development server at port 8000
-5. `/postman` - contains an postman environment and collections to test the project
+1. `poetry install` - install all dependency for the project
+2. `poetry run start` - runs the development server at port 8000
+3. `/postman` - contains an postman environment and collections to test the project
 
 ## Other commands
 

@@ -16,10 +16,7 @@ async def root():
 def create_app():
     logging_settings = LoggingSettings()
 
-    initialise_logging(
-        log_level=logging_settings.LEVEL_ROOT,
-        sqlalchemy_level=logging_settings.LEVEL_SQLALCHEMY,
-    )
+    initialise_logging(log_level=logging_settings.LEVEL_ROOT)
 
     app = FastAPI()
     app.include_router(user_router)

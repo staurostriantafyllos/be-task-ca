@@ -36,9 +36,9 @@ class ItemRepo(ABC):
         pass
 
 
-class ItemRepoSA(ItemRepo):
-    def __init__(self, db):
-        self.db = db
+class ItemRepoInMemory(ItemRepo):
+    def __init__(self, items: dict[UUID, Item]):
+        self.items = items
 
     def save_item(self, item: ItemBase) -> ItemSchema:
         new_item = Item(
@@ -47,24 +47,22 @@ class ItemRepoSA(ItemRepo):
             price=item.price,
             quantity=item.quantity,
         )
-
-        self.db.add(new_item)
-        self.db.commit()
+        self.items[new_item.id] = new_item
 
         return ItemSchema.model_validate(new_item)
 
     def get_all_items(self) -> List[ItemSchema]:
-        items = self.db.query(Item).all()
+        items = list(self.items.values())
         return [ItemSchema.model_validate(item) for item in items]
 
     def find_item_by_name(self, name: str) -> ItemSchema | None:
-        item = self.db.query(Item).filter(Item.name == name).first()
-        if not item:
-            return None
-        return ItemSchema.model_validate(item)
+        for item in self.items.values():
+            if item.name == name:
+                return ItemSchema.model_validate(item)
+        return None
 
     def find_item_by_id(self, id: UUID) -> ItemSchema | None:
-        item = self.db.query(Item).filter(Item.id == id).first()
+        item = self.items.get(id)
         if not item:
             return None
         return ItemSchema.model_validate(item)

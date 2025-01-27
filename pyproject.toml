@@ -8,8 +8,6 @@ packages = [{ include = "be_task_ca" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-sqlalchemy = "^2.0.11"
-psycopg2 = "^2.9.6"
 fastapi = ">=0.100.0"
 uvicorn = "^0.22.0"
 pydantic-settings = "^2.7.1"
@@ -32,7 +30,6 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 start = "scripts:start"
-schema = "be_task_ca.commands:create_db_schema"
 graph = "scripts:create_dependency_graph"
 tests = "scripts:run_tests"
 lint = "scripts:run_linter"
@@ -45,6 +42,3 @@ per-file-ignores = [
 ]
 max-line-length = 88
 count = true
-
-[tool.mypy]
-#plugins = "sqlalchemy.ext.mypy.plugin"
