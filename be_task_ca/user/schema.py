@@ -1,3 +1,4 @@
+import hashlib
 from typing import List
 from uuid import UUID
 from pydantic import BaseModel, ConfigDict
@@ -19,6 +20,10 @@ class UserBase(BaseModel):
 
 class UserPrivate(UserBase):
     password: str
+
+    @property
+    def hashed_password(self) -> str:
+        return hashlib.sha512(self.password.encode("UTF-8")).hexdigest()
 
 
 class User(UserBase):

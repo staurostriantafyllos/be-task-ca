@@ -1,4 +1,3 @@
-import hashlib
 from typing import List
 from uuid import UUID
 
@@ -24,11 +23,6 @@ def create_user(user_repo: UserRepo, create_user: UserPrivate) -> User:
     search_result = user_repo.find_user_by_email(create_user.email)
     if search_result is not None:
         raise UserAlreadyExistsError("An user with this email address already exists")
-
-    # Hash the password in usecase level.
-    create_user.password = hashlib.sha512(
-        create_user.password.encode("UTF-8")
-    ).hexdigest()
 
     new_user = user_repo.save_user(create_user)
 
