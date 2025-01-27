@@ -1,36 +1,19 @@
-from dataclasses import dataclass
-from typing import List
+from pydantic import BaseModel, Field
 from uuid import UUID, uuid4
-
-from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
-from ..database import Base
+from typing import List
 
 
-@dataclass
-class CartItem(Base):
-    __tablename__ = "cart_items"
-
-    user_id: Mapped[UUID] = mapped_column(
-        ForeignKey("users.id"), primary_key=True, index=True
-    )
-    item_id: Mapped[UUID] = mapped_column(ForeignKey("items.id"), primary_key=True)
-    quantity: Mapped[int] = mapped_column()
+class CartItem(BaseModel):
+    user_id: UUID
+    item_id: UUID
+    quantity: int
 
 
-@dataclass
-class User(Base):
-    __tablename__ = "users"
-
-    id: Mapped[UUID] = mapped_column(
-        primary_key=True,
-        default=uuid4,
-        index=True,
-    )
-    email: Mapped[str] = mapped_column(unique=True, index=True)
-    first_name: Mapped[str] = mapped_column()
-    last_name: Mapped[str] = mapped_column()
-    hashed_password: Mapped[str] = mapped_column()
-    shipping_address: Mapped[str | None] = mapped_column(default=None, nullable=True)
-    cart_items: Mapped[List["CartItem"]] = relationship()
+class User(BaseModel):
+    id: UUID = Field(default_factory=uuid4)
+    email: str
+    first_name: str
+    last_name: str
+    hashed_password: str
+    shipping_address: str | None = None
+    cart_items: List[CartItem] = []
