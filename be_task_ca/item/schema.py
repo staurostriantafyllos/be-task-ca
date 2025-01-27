@@ -3,16 +3,19 @@ from uuid import UUID
 from pydantic import BaseModel
 
 
-class CreateItemRequest(BaseModel):
+class ItemBase(BaseModel):
     name: str
     description: str | None = None
     price: float
     quantity: int
 
 
-class CreateItemResponse(CreateItemRequest):
+class Item(ItemBase):
     id: UUID
+
+    class Config:
+        orm_mode = True
 
 
 class AllItemsRepsonse(BaseModel):
-    items: List[CreateItemResponse]
+    items: List[Item]

@@ -1,85 +1,69 @@
 import hashlib
-from fastapi import HTTPException
-from sqlalchemy.orm import Session
+from typing import List
+from uuid import UUID
 
-from ..item.model import Item
-
-from ..item.repository import find_item_by_id
-
-from .model import CartItem, User
-
-from .repository import (
-    find_cart_items_for_user_id,
-    find_user_by_email,
-    find_user_by_id,
-    save_user,
+from ..exceptions import (
+    ItemAlreadyInCartError,
+    ItemDoesNotExistError,
+    ItemQuantityError,
+    UserAlreadyExistsError,
+    UserDoesNotExistError,
 )
+from .repository import UserRepo
+
+from ..item.repository import ItemRepo
+
 from .schema import (
-    AddToCartRequest,
-    AddToCartResponse,
-    CreateUserRequest,
-    CreateUserResponse,
+    ItemQuantity,
+    UserPrivate,
+    User,
 )
 
 
-def create_user(create_user: CreateUserRequest, db: Session) -> CreateUserResponse:
-    search_result = find_user_by_email(create_user.email, db)
+def create_user(user_repo: UserRepo, create_user: UserPrivate) -> User:
+    search_result = user_repo.find_user_by_email(create_user.email)
     if search_result is not None:
-        raise HTTPException(
-            status_code=409, detail="An user with this email adress already exists"
-        )
+        raise UserAlreadyExistsError("An user with this email address already exists")
 
-    new_user = User(
-        first_name=create_user.first_name,
-        last_name=create_user.last_name,
-        email=create_user.email,
-        hashed_password=hashlib.sha512(
-            create_user.password.encode("UTF-8")
-        ).hexdigest(),
-        shipping_address=create_user.shipping_address,
-    )
+    # Hash the password in usecase level.
+    create_user.password = hashlib.sha512(
+        create_user.password.encode("UTF-8")
+    ).hexdigest()
 
-    save_user(new_user, db)
+    new_user = user_repo.save_user(create_user)
 
-    return CreateUserResponse(
-        id=new_user.id,
-        first_name=new_user.first_name,
-        last_name=new_user.last_name,
-        email=new_user.email,
-        shipping_address=new_user.shipping_address,
-    )
+    return new_user
 
 
-def add_item_to_cart(user_id: int, cart_item: AddToCartRequest, db: Session) -> AddToCartResponse:
-    user: User = find_user_by_id(user_id, db)
+def add_item_to_cart(
+    user_repo: UserRepo,
+    item_repo: ItemRepo,
+    user_id: UUID,
+    cart_item: ItemQuantity,
+) -> List[ItemQuantity]:
+    user = user_repo.find_user_by_id(user_id)
     if user is None:
-        raise HTTPException(status_code=404, detail="User does not exist")
+        raise UserDoesNotExistError("User does not exist")
 
-    item: Item = find_item_by_id(cart_item.item_id, db)
+    item = item_repo.find_item_by_id(cart_item.item_id)
     if item is None:
-        raise HTTPException(status_code=404, detail="Item does not exist")
+        raise ItemDoesNotExistError("Item does not exist")
+
     if item.quantity < cart_item.quantity:
-        raise HTTPException(status_code=409, detail="Not enough items in stock")
+        raise ItemQuantityError("Not enough items in stock")
 
     item_ids = [o.item_id for o in user.cart_items]
     if cart_item.item_id in item_ids:
-        raise HTTPException(status_code=409, detail="Item already in cart")
+        raise ItemAlreadyInCartError("Item already in cart")
 
-    new_cart_item: CartItem = CartItem(
-        user_id=user.id, item_id=cart_item.item_id, quantity=cart_item.quantity
-    )
+    user_repo.update_user_cart_items(user_id, cart_item)
 
-    user.cart_items.append(new_cart_item)
-
-    save_user(user, db)
-
-    return list_items_in_cart(user.id, db)
+    return user_repo.list_items_in_cart(user.id)
 
 
-def list_items_in_cart(user_id, db):
-    cart_items = find_cart_items_for_user_id(user_id, db)
-    return AddToCartResponse(items=list(map(cart_item_model_to_schema, cart_items)))
+def list_items_in_cart(user_repo: UserRepo, user_id: UUID) -> List[ItemQuantity]:
+    user = user_repo.find_user_by_id(user_id)
+    if user is None:
+        raise UserDoesNotExistError("User does not exist")
 
-
-def cart_item_model_to_schema(model: CartItem):
-    return AddToCartRequest(item_id=model.item_id, quantity=model.quantity)
+    return user_repo.list_items_in_cart(user.id)

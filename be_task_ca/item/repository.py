@@ -1,22 +1,39 @@
 from typing import List
 from uuid import UUID
-from sqlalchemy.orm import Session
+
+from .schema import ItemBase, Item as ItemSchema
 from .model import Item
 
 
-def save_item(item: Item, db: Session) -> Item:
-    db.add(item)
-    db.commit()
-    return item
+class ItemRepo:
+    def __init__(self, db):
+        self.db = db
 
+    def save_item(self, item: ItemBase) -> ItemSchema:
+        new_item = Item(
+            name=item.name,
+            description=item.description,
+            price=item.price,
+            quantity=item.quantity,
+        )
 
-def get_all_items(db: Session) -> List[Item]:
-    return db.query(Item).all()
+        self.db.add(new_item)
+        self.db.commit()
 
+        return ItemSchema.from_orm(new_item)
 
-def find_item_by_name(name: str, db: Session) -> Item:
-    return db.query(Item).filter(Item.name == name).first()
+    def get_all_items(self) -> List[ItemSchema]:
+        items = self.db.query(Item).all()
+        return [ItemSchema.from_orm(item) for item in items]
 
+    def find_item_by_name(self, name: str) -> ItemSchema | None:
+        item = self.db.query(Item).filter(Item.name == name).first()
+        if not item:
+            return
+        return ItemSchema.from_orm(item)
 
-def find_item_by_id(id: UUID, db: Session) -> Item:
-    return db.query(Item).filter(Item.id == id).first()
+    def find_item_by_id(self, id: UUID) -> ItemSchema | None:
+        item = self.db.query(Item).filter(Item.id == id).first()
+        if not item:
+            return
+        return ItemSchema.from_orm(item)
