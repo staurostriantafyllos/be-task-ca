@@ -3,8 +3,12 @@ from uuid import UUID, uuid4
 
 import pytest
 
-from be_task_ca.exceptions import (ItemAlreadyInCartError, ItemDoesNotExistError, ItemQuantityError,
-                                   UserDoesNotExistError)
+from be_task_ca.exceptions import (
+    ItemAlreadyInCartError,
+    ItemDoesNotExistError,
+    ItemQuantityError,
+    UserDoesNotExistError,
+)
 from be_task_ca.item.repository import ItemRepo
 from be_task_ca.item.schema import Item
 from be_task_ca.user.repository import UserRepo
@@ -66,14 +70,18 @@ def existing_cart_item(item_in_cart):
     return ItemQuantity(item_id=item_in_cart.id, quantity=item_in_cart.quantity - 2)
 
 
-def test_add_item_to_cart_when_the_user_does_not_exist(user_repo, item_repo, user, new_cart_item):
+def test_add_item_to_cart_when_the_user_does_not_exist(
+    user_repo, item_repo, user, new_cart_item
+):
     user_repo.find_user_by_id.return_value = None
 
     with pytest.raises(UserDoesNotExistError):
         add_item_to_cart(user_repo, item_repo, user.id, new_cart_item)
 
 
-def test_add_item_to_cart_when_the_item_does_not_exist(user_repo, item_repo, user, new_cart_item):
+def test_add_item_to_cart_when_the_item_does_not_exist(
+    user_repo, item_repo, user, new_cart_item
+):
     user_repo.find_user_by_id.return_value = MagicMock()
     item_repo.find_item_by_id.return_value = None
 
@@ -81,17 +89,23 @@ def test_add_item_to_cart_when_the_item_does_not_exist(user_repo, item_repo, use
         add_item_to_cart(user_repo, item_repo, user.id, new_cart_item)
 
 
-def test_add_item_to_cart_when_not_enough_items_in_stock(user_repo, item_repo, user, new_cart_item):
+def test_add_item_to_cart_when_not_enough_items_in_stock(
+    user_repo, item_repo, user, new_cart_item
+):
     user_repo.find_user_by_id.return_value = user
     item_repo.find_item_by_id.return_value = new_cart_item
 
-    item_to_add = ItemQuantity(item_id=new_cart_item.item_id, quantity=new_cart_item.quantity + 10)
+    item_to_add = ItemQuantity(
+        item_id=new_cart_item.item_id, quantity=new_cart_item.quantity + 10
+    )
 
     with pytest.raises(ItemQuantityError):
         add_item_to_cart(user_repo, item_repo, user.id, item_to_add)
 
 
-def test_add_item_to_cart_when_item_already_in_cart(user_repo, item_repo, user, existing_cart_item):
+def test_add_item_to_cart_when_item_already_in_cart(
+    user_repo, item_repo, user, existing_cart_item
+):
     user_repo.find_user_by_id.return_value = user
     item_repo.find_item_by_id.return_value = existing_cart_item
 

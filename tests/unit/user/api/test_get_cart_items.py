@@ -41,7 +41,9 @@ def test_get_users_cart(usecase_mock, user_repo, user_id, cart_items):
 
     usecase_mock.assert_called_once_with(user_repo, user_id)
     assert response.status_code == 200
-    assert response.json() == AddToCartResponse(items=cart_items).model_dump(mode='json')
+    assert response.json() == AddToCartResponse(items=cart_items).model_dump(
+        mode='json'
+    )
 
     app.dependency_overrides = {}
 
