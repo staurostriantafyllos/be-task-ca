@@ -1,7 +1,7 @@
 import logging
 
 
-def initialise_logging(log_level=logging.INFO, sqlalchemy_level=logging.INFO):
+def initialise_logging(log_level: str = "INFO", sqlalchemy_level: str = "WARNING"):
     logging.basicConfig(
         level=log_level, format="%(asctime)s - %(levelname)s - %(message)s"
     )

@@ -2,8 +2,16 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-engine = create_engine("postgresql://postgres:example@localhost:5432/postgres")
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+from .config import DatabaseSettings
+
+database_config = DatabaseSettings()
+
+engine = create_engine(database_config.CONNECTION_STRING)
+SessionLocal = sessionmaker(
+    autocommit=database_config.AUTOCOMMIT,
+    autoflush=database_config.AUTOFLUSH,
+    bind=engine,
+)
 
 Base = declarative_base()
 
