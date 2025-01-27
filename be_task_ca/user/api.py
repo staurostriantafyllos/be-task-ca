@@ -72,5 +72,11 @@ async def post_cart(
 async def get_cart(
     user_id: UUID, user_repo: UserRepo = Depends(get_user_repo)
 ) -> AddToCartResponse:
-    cart_items = list_items_in_cart(user_repo, user_id)
-    return AddToCartResponse(items=cart_items)
+    try:
+        cart_items = list_items_in_cart(user_repo, user_id)
+        return AddToCartResponse(items=cart_items)
+    except UserDoesNotExistError as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e),
+        )
