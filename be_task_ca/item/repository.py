@@ -60,11 +60,11 @@ class ItemRepoSA(ItemRepo):
     def find_item_by_name(self, name: str) -> ItemSchema | None:
         item = self.db.query(Item).filter(Item.name == name).first()
         if not item:
-            return
+            return None
         return ItemSchema.model_validate(item)
 
     def find_item_by_id(self, id: UUID) -> ItemSchema | None:
         item = self.db.query(Item).filter(Item.id == id).first()
         if not item:
-            return
+            return None
         return ItemSchema.model_validate(item)

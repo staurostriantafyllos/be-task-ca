@@ -16,7 +16,7 @@ class CartItem(Base):
         ForeignKey("users.id"), primary_key=True, index=True
     )
     item_id: Mapped[UUID] = mapped_column(ForeignKey("items.id"), primary_key=True)
-    quantity: Mapped[int]
+    quantity: Mapped[int] = mapped_column()
 
 
 @dataclass
@@ -29,8 +29,8 @@ class User(Base):
         index=True,
     )
     email: Mapped[str] = mapped_column(unique=True, index=True)
-    first_name: Mapped[str]
-    last_name: Mapped[str]
-    hashed_password: Mapped[str]
-    shipping_address: Mapped[str] = mapped_column(default=None)
+    first_name: Mapped[str] = mapped_column()
+    last_name: Mapped[str] = mapped_column()
+    hashed_password: Mapped[str] = mapped_column()
+    shipping_address: Mapped[str | None] = mapped_column(default=None, nullable=True)
     cart_items: Mapped[List["CartItem"]] = relationship()

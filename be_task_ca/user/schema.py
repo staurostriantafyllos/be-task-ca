@@ -15,7 +15,7 @@ class UserBase(BaseModel):
     email: str
     first_name: str
     last_name: str
-    shipping_address: str | None
+    shipping_address: str | None = None
 
 
 class UserPrivate(UserBase):

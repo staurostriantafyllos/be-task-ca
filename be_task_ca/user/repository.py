@@ -35,7 +35,7 @@ class UserRepo(ABC):
         pass
 
     @abstractmethod
-    def find_user_by_id(self, id: UUID) -> UserSchema:
+    def find_user_by_id(self, id: UUID) -> UserSchema | None:
         """
         Find a user by their unique ID.
         """
@@ -80,13 +80,13 @@ class UserRepoSA(UserRepo):
     def find_user_by_email(self, email: str) -> UserSchema | None:
         user = self.db.query(User).filter(User.email == email).first()
         if not user:
-            return
+            return None
         return UserSchema.model_validate(user)
 
     def find_user_by_id(self, id: UUID) -> UserSchema | None:
         user = self.db.query(User).filter(User.id == id).first()
         if not user:
-            return
+            return None
         return UserSchema.model_validate(user)
 
     def list_items_in_cart(self, user_id) -> List[ItemQuantity]:

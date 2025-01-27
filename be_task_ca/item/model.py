@@ -16,6 +16,6 @@ class Item(Base):
         index=True,
     )
     name: Mapped[str] = mapped_column(unique=True, index=True)
-    description: Mapped[str]
-    price: Mapped[float]
-    quantity: Mapped[int]
+    description: Mapped[str | None] = mapped_column(default=None, nullable=True)
+    price: Mapped[float] = mapped_column()
+    quantity: Mapped[int] = mapped_column()
