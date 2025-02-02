@@ -1,0 +1,44 @@
+{
+    "id": "my-shop",
+    "realm": "my-shop",
+    "enabled": true,
+    "clients": [
+        {
+            "clientId": "admin-client",
+            "protocol": "openid-connect",
+            "publicClient": false,
+            "secret": "your-secret",
+            "directAccessGrantsEnabled": false,
+            "standardFlowEnabled": false,
+            "authorizationServicesEnabled": true
+        },
+        {
+            "clientId": "user-client",
+            "protocol": "openid-connect",
+            "publicClient": true,
+            "directAccessGrantsEnabled": true,
+            "standardFlowEnabled": true,
+            "redirectUris": [
+                "http://localhost:3000/*"
+            ],
+            "webOrigins": [
+                "*"
+            ],
+            "attributes": {
+                "pkce.enforced": "true"
+            }
+        }
+    ],
+    "users": [
+        {
+            "username": "service-account-admin-client",
+            "enabled": true,
+            "serviceAccountClientId": "admin-client",
+            "clientRoles": {
+                "realm-management": [
+                    "realm-admin"
+                ]
+            }
+        }
+    ]
+}

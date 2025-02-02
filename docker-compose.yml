@@ -1,10 +1,35 @@
-version: "3.9"
 services:
   db:
     image: postgres
     ports:
       - 5432:5432
-    restart: always
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      retries: 5
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: example
 
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    command: ["start"]
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL_HOST: db
+      KC_DB_URL_DATABASE: keycloakdb
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: example
+
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME_STRICT: "false"
