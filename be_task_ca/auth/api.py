@@ -13,6 +13,7 @@ from be_task_ca.auth.schema import (
     UserSignup,
 )
 from be_task_ca.exceptions import (
+    UserException,
     UserLoginError,
     UserSignupError,
     UserTokenRefreshException,
@@ -29,6 +30,8 @@ async def signup(user: UserSignup):
     try:
         status_code = await create_user(user)
     except UserSignupError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.message)
+    except UserException as e:
         raise HTTPException(status_code=e.status_code, detail=e.message)
 
     return JSONResponse(status_code=status_code, content={"message": "User created"})
