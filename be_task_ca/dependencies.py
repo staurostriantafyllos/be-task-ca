@@ -24,7 +24,7 @@ def get_item_repo(db: Session = Depends(get_db_session)):  # noqa: B008
 
 
 def get_logged_user(
-    credentials: HTTPAuthorizationCredentials = Security(HTTPBearer()),
+    credentials: HTTPAuthorizationCredentials = Security(HTTPBearer()),  # noqa: B008
 ) -> dict:
     token = credentials.credentials
     try:

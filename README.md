@@ -138,7 +138,7 @@ This project includes a working example with a running Keycloak instance and API
 - **Keycloak URL**: [https://keycloak.cocoware.io/](https://keycloak.cocoware.io/)
   - **Admin Credentials**: `admin / admin`
 - **API URL**: [https://mr-clean.cocoware.io/docs](https://mr-clean.cocoware.io/docs)
-
+- **GraphQL API URL**: [https://mr-clean.cocoware.io/graphql](https://mr-clean.cocoware.io/graphql)
 
 ## Authentication
 This API implements authentication using **Keycloak**.
@@ -148,6 +148,12 @@ This API implements authentication using **Keycloak**.
 - Specifically, only the **product addition endpoint** requires authentication and is restricted to **store managers**. Other endpoints, such as those related to actions like adding items to the cart, would typically be implemented in a frontend.
 - The POST /Users endpoint should be replaced with POST /auth/signup
 
+## GraphQL API
+A very simple GraphQL API has been added to list items added by store managers.
+- **Modular Design**: New entities can be integrated into the Query in the future (e.g. Cart Items).
+- **Clean Architecture**: Built using use cases and repositories for clear separation of concerns.
+- **Pydantic Integration**: Leverages existing Pydantic models, eliminating redundant definitions.
+
 ### **⚠️ Disclaimer**
-1. The **signup/login/refresh token** endpoints were implemented for **experimental purposes**, even though they are typically handled in a frontend application.
+1. The **login & refresh token** endpoints were implemented for **experimental purposes**, even though they are typically handled in a frontend application.
 2. The authentication endpoints **do not follow clean architecture principles**—they were implemented this way for time efficiency.
