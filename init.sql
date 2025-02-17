@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS keycloakdb;
+CREATE DATABASE keycloakdb;

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from ..dependencies import get_item_repo
+from ..dependencies import get_item_repo, get_logged_user
 from ..exceptions import ItemAlreadyExistsError
 from ..item.repository import ItemRepo
 
@@ -17,7 +17,9 @@ item_router = APIRouter(
 
 @item_router.post("/")
 async def post_item(
-    item: ItemBase, item_repo: ItemRepo = Depends(get_item_repo)
+    item: ItemBase,
+    item_repo: ItemRepo = Depends(get_item_repo),
+    _: dict = Depends(get_logged_user),
 ) -> Item:
     try:
         return create_item(item_repo, item)

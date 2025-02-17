@@ -1,9 +1,17 @@
+import os
 import subprocess
 import uvicorn
 
 
 def start():
-    uvicorn.run("be_task_ca.app:app", host="0.0.0.0", port=8000, reload=True)
+    proxy_headers = os.getenv("KC_PROXY_HEADERS") is not None
+    uvicorn.run(
+        "be_task_ca.app:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=True,
+        proxy_headers=proxy_headers,
+    )
 
 
 def auto_format():

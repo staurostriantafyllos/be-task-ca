@@ -115,3 +115,45 @@ If you have not installed poetry you find instructions [here](https://python-poe
 * As a customer, I want to be able to view detailed product information, such as price, quantity available, and product description, so that I can make an informed purchase decision.
 * As a customer, I want to be able to add products to my cart so that I can easily keep track of my intended purchases.
 * As an inventory manager, I want to be able to add new products to the system so that they are available for customers to purchase.
+
+## Running in Docker
+
+If you want to run the entire setup using **Docker**, follow these steps:
+
+1. **Start all services (PostgreSQL, Keycloak, API):**
+    ```sh
+   docker-compose up -d
+   ```
+2.	**Create the required database tables:**
+    ```
+    docker exec mr-clean-api sh -c "poetry run schema"
+    ```
+
+3. **Set up Keycloak (Realm & Clients):**
+- Import the **Keycloak realm configuration** using `keycloak-realm.json`. For detailed instructions on how to do this, refer to [this guide on Medium](https://medium.com/@ramanamuttana/export-and-import-of-realm-from-keycloak-131deb118b72).
+
+## Example
+This project includes a working example with a running Keycloak instance and API.
+
+- **Keycloak URL**: [https://keycloak.cocoware.io/](https://keycloak.cocoware.io/)
+  - **Admin Credentials**: `admin / admin`
+- **API URL**: [https://mr-clean.cocoware.io/docs](https://mr-clean.cocoware.io/docs)
+- **GraphQL API URL**: [https://mr-clean.cocoware.io/graphql](https://mr-clean.cocoware.io/graphql)
+
+## Authentication
+This API implements authentication using **Keycloak**.
+
+- You can perform **signup, login, and refresh token** operations.
+- The API **protects certain endpoints** using Keycloak authentication.
+- Specifically, only the **product addition endpoint** requires authentication and is restricted to **store managers**. Other endpoints, such as those related to actions like adding items to the cart, would typically be implemented in a frontend.
+- The POST /Users endpoint should be replaced with POST /auth/signup
+
+## GraphQL API
+A very simple GraphQL API has been added to list items added by store managers.
+- **Modular Design**: New entities can be integrated into the Query in the future (e.g. Cart Items).
+- **Clean Architecture**: Built using use cases and repositories for clear separation of concerns.
+- **Pydantic Integration**: Leverages existing Pydantic models, eliminating redundant definitions.
+
+### **⚠️ Disclaimer**
+1. The **login & refresh token** endpoints were implemented for **experimental purposes**, even though they are typically handled in a frontend application.
+2. The authentication endpoints **do not follow clean architecture principles**—they were implemented this way for time efficiency.

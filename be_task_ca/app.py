@@ -5,6 +5,8 @@ from .config import LoggingSettings
 
 from .user.api import user_router
 from .item.api import item_router
+from .auth.api import auth_router
+from .graphql import graphql_router
 
 
 async def root():
@@ -22,8 +24,10 @@ def create_app():
     )
 
     app = FastAPI()
+    app.include_router(auth_router)
     app.include_router(user_router)
     app.include_router(item_router)
+    app.include_router(graphql_router, prefix="/graphql")
     app.add_api_route("/", root)
     return app
 
